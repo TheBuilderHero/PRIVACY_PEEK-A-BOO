@@ -58,7 +58,7 @@ app.post('/ce', async (req, res) => {
           
 
           // Log the success
-          //console.log("Successful server user, url, pp, prediction", user, url, pp, predictions);
+          console.log("Successful server user, url, pp, prediction", user, url, pp, predictions);
           res.status(200).send("Success");
        
     } catch (error) {
@@ -70,29 +70,25 @@ app.post('/ce', async (req, res) => {
 // Gets for website to use
 app.get('/getUserData', async (req, res) => {
     try {
-        const { user } = req.query;
+        const latestData = await Url.findOne().sort({ _id: -1 });
 
-        if (!user) {
-            return res.status(400).send('User parameter is required.');
+        if (!latestData) {
+            return res.status(404).send('No data found.');
         }
 
-        const userData = await Url.find({ user: user });
+        const responseData = {
+            url: latestData.url,
+            predictions: latestData.predictions
+        };
 
-        if (!userData || userData.length === 0) {
-            return res.status(404).send('No data found for this user.');
-        }
-
-        const responseData = userData.map(entry => ({
-            url: entry.url
-        }));
-
-        // Send the response containing URL and predictions for the user
+        // Send the response containing the most recent URL and predictions
         res.send(responseData);
     } catch (error) {
         console.error('Error retrieving user data:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // For every unique URL return predictions, for showing histogram
 app.get('/getAllUserData', async (req, res) => {
