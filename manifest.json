@@ -1,0 +1,32 @@
+// manifest.json
+{
+  "manifest_version": 3,
+  "name": "Privacy Peek-A-Boo",
+  "version": "1.0",
+  "description": "Extracts the privacy policy text from the current website.",
+  "permissions": ["http://localhost:5000/","tabs", "activeTab", "storage", "scripting"],
+    
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "peekaboo1.png",
+      "48": "peekaboo1.png",
+      "128": "peekaboo1.png"
+    }
+  },
+  "icons": {
+    "16": "peekaboo1.png",
+    "48": "peekaboo1.png",
+    "128": "peekaboo1.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
+
